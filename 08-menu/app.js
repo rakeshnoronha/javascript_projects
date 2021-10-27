@@ -71,32 +71,26 @@ const menu = [
     img: './images/item-9.jpeg',
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: 'steak dinner',
+    category: 'dinner',
+    price: 36.99,
+    img: './images/item-10.jpeg',
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ]
 
 const sectionCenter = document.querySelector('.section-center')
-const btns = document.querySelectorAll('.filter-btn')
+const btnContainer = document.querySelector('.btn-container')
 
+// page load
 window.addEventListener('DOMContentLoaded', () => {
   displayMenuItems(menu)
+  displayMenuButtons()
 })
 
-// Filter
-btns.forEach((btn) => {
-  btn.addEventListener('click', (e) => {
-    const menuCategory = e.currentTarget.dataset.id
-    const selectedItems = menu.filter((menuItem) => {
-      if (menuItem.category === menuCategory) {
-        return menuItem
-      }
-    })
-    if (menuCategory === 'all') {
-      displayMenuItems(menu)
-    } else {
-      displayMenuItems(selectedItems)
-    }
-  })
-})
-
+// Display single menu item
 function displayMenuItems(menuItems) {
   let displayItem = menuItems.map(function (item) {
     return `<article class="menu-item">
@@ -114,4 +108,45 @@ function displayMenuItems(menuItems) {
   })
   displayItem = displayItem.join('')
   sectionCenter.innerHTML = displayItem
+}
+
+// Dynamic buttons
+function displayMenuButtons() {
+  // Dynamic buttons
+  const uniqCategory = menu.reduce(
+    (value, item) => {
+      if (!value.includes(item.category)) {
+        value.push(item.category)
+      }
+      return value
+    },
+    ['all']
+  )
+  console.log(uniqCategory)
+
+  let buttons = uniqCategory.map((item) => {
+    return `<button data-id=${item} class="filter-btn" type="button">
+          ${item}
+        </button>`
+  })
+  buttons = buttons.join('')
+  btnContainer.innerHTML = buttons
+  const btns = document.querySelectorAll('.filter-btn')
+
+  // Filter
+  btns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const menuCategory = e.currentTarget.dataset.id
+      const selectedItems = menu.filter((menuItem) => {
+        if (menuItem.category === menuCategory) {
+          return menuItem
+        }
+      })
+      if (menuCategory === 'all') {
+        displayMenuItems(menu)
+      } else {
+        displayMenuItems(selectedItems)
+      }
+    })
+  })
 }
